@@ -63,15 +63,16 @@ void convert2Gray(BMP& head) {
 }
 
 int sobel(BMP& head, int x, int y) {
-	if (x > head.dib.Height - FILTER_SIZE || y > head.dib.Width - FILTER_SIZE) return 0;
 	int sobelX[][3] = { {1,0,-1},{2,0,-2},{1,0,-1} };
 	int sobelY[][3] = { {-1,-2,-1},{0,0,0},{1,2,1} };
 	int valueX = 0;
 	int valueY = 0;
 	for (int i = 0; i < FILTER_SIZE; i++) {
 		for (int j = 0; j < FILTER_SIZE; j++) {
-			valueX += head.ImgByte[(x + i) * head.util.LineSize + (y + j) * head.util.Channel] * sobelX[i][j];
-			valueY += head.ImgByte[(x + i) * head.util.LineSize + (y + j) * head.util.Channel] * sobelY[i][j];
+			if (x - 1 + i >= 0 && y - 1 + j >= 0 && x - 1 + i <= head.dib.Height - 1 && y - 1 + j <= head.dib.Width - 1) {
+				valueX += head.ImgByte[(x - 1 + i) * head.util.LineSize + (y - 1 + j) * head.util.Channel] * sobelX[i][j];
+				valueY += head.ImgByte[(x - 1 + i) * head.util.LineSize + (y - 1 + j) * head.util.Channel] * sobelY[i][j];
+			}
 		}
 	}
 	return (int)sqrt(valueX * valueX + valueY * valueY);
