@@ -48,15 +48,18 @@ char* getName(char* imgPath) {
 }
 
 void convert2Gray(BMP& head) {
-	float weight[] = { 0.3, 0.59, 0.11 };
+	float weight[] = { 0.11, 0.59, 0.3 };
 	for (int i = 0; i < head.dib.Height; i++) {
 		for (int j = 0; j < head.dib.Width; j++) {
 			float value = 0;
-			for (int k = 0; k < head.util.Channel; k++) {
+			for (int k = 0; k < head.util.ChannelExcludeA; k++) {
 				value += head.ImgByte[i * head.util.LineSize + j * head.util.Channel + k] * weight[k];
 			}
-			for (int k = 0; k < head.util.Channel; k++) {
+			for (int k = 0; k < head.util.ChannelExcludeA; k++) {
 				head.ImgByte[i * head.util.LineSize + j * head.util.Channel + k] = (int)value;
+			}
+			for (int k = head.util.ChannelExcludeA; k < head.util.Channel; k++) {
+				head.ImgByte[i * head.util.LineSize + j * head.util.Channel + k] = 255;
 			}
 		}
 	}
